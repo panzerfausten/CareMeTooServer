@@ -49,8 +49,14 @@ class Multimedia(DbObject):
 	def toList(self):
 		return [str(self.idmultimedia),str(self.idcaregiver),self.description,self.path,self.extra]
 	def toJson(self):
-		return json.dumps({"idcaregiver":self.idcaregiver,"description":self.description,"path":self.path,"extra":self.extra})
-#m = Multimedia()
+		_path = self._filespath % (self.idcaregiver,self.path)
+		return json.dumps({"idcaregiver":self.idcaregiver,"description":self.description,"path":_path,"extra":self.extra})
+	def toDict(self):
+		_path = self._filespath % (self.idcaregiver,self.path)
+		return {"idcaregiver":self.idcaregiver,"description":self.description,"path":_path,"extra":self.extra}
+		
+m = Multimedia()
+print m.get(21).toJson()
 #m.insert(1,"multimedia test","/asdasd.m4a","adasd")
 #idd = m.get(1).idmultimedia
 #m.delete(idd)

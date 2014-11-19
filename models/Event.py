@@ -1,4 +1,5 @@
 from DbObject import DbObject
+import Multimedia
 import json
 class Event(DbObject):
 	def __init__(self,idevent= -1, idcaregiver=-1, idmultimedia=-1, activity="",mood="",description="",timestamp=""):
@@ -21,19 +22,25 @@ class Event(DbObject):
 		for idevent,idcaregiver,idmultimedia,activity,mood,description,timestamp in _cursor:
 			_e = Event(idevent,idcaregiver,idmultimedia,activity,mood,description,timestamp)
 		return _e
-	def all(self,idcaregiver=-1,toList=False):
+	def all(self,idcaregiver=-1,toList=False,toJson=False):
 		_getQuery = "SELECT * FROM %s where idcaregiver= %i;" % (self._tableName,idcaregiver)
 		_cursor =self.cnx.cursor()
 		_cursor.execute(_getQuery)
-		_caregivers = []
+		_events = []
 		for idevent,idcaregiver,idmultimedia,activity,mood,description,timestamp in _cursor:
 			_e = Event(idevent,idcaregiver,idmultimedia,activity,mood,description,timestamp)
-			if not toList:
-				_caregivers.append(_e)
-			else:
-				_caregivers.append([str(idevent),str(idcaregiver),str(idmultimedia),activity,mood,description,timestamp])
-
-		return _caregivers
+			if toList:
+				_events.append([str(idevent),str(idcaregiver),str(idmultimedia),activity,mood,description,timestamp])
+			elif toJson:
+				_events.append(_e)
+		if toList:
+			return _events
+		elif toJson:
+			_dict_events = []
+			for _e in _events:
+				_dict_events.append(_e.toDict())
+			return json.dumps(_dict_events)
+		return _events
 	def delete(self,_id):
 		_delQuery = "DELETE FROM %s where idevent=%i;" % (self._tableName,_id)
 		_cursor =self.cnx.cursor()
@@ -51,6 +58,28 @@ class Event(DbObject):
 	def toList(self):
 		return [str(idevent),str(idcaregiver),str(idmultimedia),activity,mood,description,timestamp]
 	def toJson(self):
-		return json.dumps({"activity":self.activity,"mood":self.mood,"description":self.description,"timestamp":self.timestamp.strftime('%Y-%m-%dT%H:%M:%S')})
+		if (self.idmultimedia != -1):
+			
+			_M = Multimedia.Multimedia()
+			_m = _M.get(self.idmultimedia)
+			return json.dumps({"activity":self.activity,"mood":self.mood,"description":self.description,"timestamp":self.timestamp.strftime('%Y-%m-%dT%H:%M:%S'), "multimedia":_m.toDict() })
+		else:
+			return json.dumps({"activity":self.activity,"mood":self.mood,"description":self.description,"timestamp":self.timestamp.strftime('%Y-%m-%dT%H:%M:%S')})
+
+	def toDict(self):
+		_hasMultimedia = True
+		try:
+			int (self.idmultimedia)
+		except:
+			_hasMultimedia = False
+		if (_hasMultimedia ):
+			_M = Multimedia.Multimedia()
+			_m = _M.get(self.idmultimedia)
+		
+			return {"activity":self.activity,"mood":self.mood,"description":self.description,"timestamp":self.timestamp.strftime('%Y-%m-%dT%H:%M:%S'), "multimedia":_m.toDict() }
+		else:
+			return {"activity":self.activity,"mood":self.mood,"description":self.description,"timestamp":self.timestamp.strftime('%Y-%m-%dT%H:%M:%S')}
+
+
 c = Event()
-print c.get(1).toJson()
+print c.get(49).toJson()
