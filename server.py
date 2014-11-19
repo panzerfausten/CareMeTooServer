@@ -3,8 +3,7 @@ from flask import request
 app = Flask(__name__)
 
 from ViewRenderer import ViewRenderer
-from models import CareGiver
-from models import Data
+from models import CareGiver,Data,Event
 
 ######################upload files
 import os
@@ -58,7 +57,23 @@ def careGiverData(caregiver_id):
 		return _res.toJson()
 	else:
 		return "Method not supported"
-
+@app.route("/caregivers/<int:caregiver_id>/event",methods=['GET','POST'])
+def careGiverEvent(caregiver_id):
+	if request.method == 'GET':
+		_E = Event.Event()
+		_all = _E.all(caregiver_id,toList=True)
+		_result = ""
+		return str(_all)
+	elif request.method == 'POST':
+		_e = Event.Event()
+		_activity    = request.form['activity']
+		_mood        = request.form['mood']
+		_description = request.form['description']
+		_timestamp = request.form['timestamp']
+		_res = _e.insert(idcaregiver=caregiver_id,idmultimedia=-1,activity=_activity,mood=_mood,description=_description,timestamp=_timestamp)
+		return _res.toJson()
+	else:
+		return "Method not supported"
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
