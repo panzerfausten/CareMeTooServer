@@ -49,5 +49,6 @@ class CareGiver(DbObject):
 		return [str(self.idcaregivers),self.name,self.username,self.password]
 	def toJson(self):
 		return json.dumps({"name":self.name,"username":self.username,"password":self.password})
-c = CareGiver()
+if __name__ == "__main__":
+    c = CareGiver()
 

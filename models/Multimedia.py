@@ -54,9 +54,9 @@ class Multimedia(DbObject):
 	def toDict(self):
 		_path = self._filespath % (self.idcaregiver,self.path)
 		return {"idcaregiver":self.idcaregiver,"description":self.description,"path":_path,"extra":self.extra}
-		
-m = Multimedia()
-print m.get(21).toJson()
-#m.insert(1,"multimedia test","/asdasd.m4a","adasd")
-#idd = m.get(1).idmultimedia
-#m.delete(idd)
+if __name__ == "__main__":
+    m = Multimedia()
+    inserted =  m.insert(1,"multimedia test","/asdasd.m4a","adasd")
+    print inserted.toJson()
+    #idd = m.get(1).idmultimedia
+    #m.delete(idd)

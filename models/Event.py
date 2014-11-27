@@ -80,6 +80,8 @@ class Event(DbObject):
 		else:
 			return {"activity":self.activity,"mood":self.mood,"description":self.description,"timestamp":self.timestamp.strftime('%Y-%m-%dT%H:%M:%S')}
 
+if __name__ == "__main__":
+    c = Event()
+    _inserted_data = c.insert(1,idcaregiver=1,activity='feeding my father',mood='happy',description='we were dead before the ship even sank',timestamp='2014-11-27 12:07:00')
+    print _inserted_data.toJson()
 
-c = Event()
-print c.get(49).toJson()

@@ -63,8 +63,11 @@ class Data(DbObject):
 		return [self.iddata,self.idcaregiver,self.datatype,self.value,self.extra,self.location,self.timestamp]
 	def toJson(self):
 		return json.dumps({"iddata":self.iddata,"idcaregiver":self.idcaregiver,"datatype":self.datatype,"value":self.value,"extra":self.extra,"location":self.location,"timestamp":self.timestamp.strftime('%Y-%m-%dT%H:%M:%S')})
-
-#d = Data()
+if __name__ == "__main__":
+    d = Data()
+    _insertedData  = d.insert(1,"HR","78","listening to the music","10,10","2014-11-27 11:53:00")
+    print _insertedData.extra
+#print d.getById(102041).extra
 #print d.all(1)
 #print d.all(toList=True)
 #print d.getById(19)
