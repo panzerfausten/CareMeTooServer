@@ -54,10 +54,21 @@ def careGiverData(caregiver_id):
 		_extra = request.form['extra']
 		_location = request.form['location']
 		_timestamp = request.form['timestamp']
+                print _datatype
+                print _value
+                print _extra
+                print _location
+                print _timestamp
 		_res = _d.insert(caregiver_id,_datatype,_value,_extra,_location,_timestamp)
 		return _res.toJson()
 	else:
 		return "Method not supported"
+@app.route("/caregivers/<int:caregiver_id>/data/<int:data_id>",methods=['GET','POST'])
+def getDataById(caregiver_id,data_id):
+        if request.method == "GET":
+                _D = Data.Data()
+                _d = _D.getById(data_id)
+                return _d.toJson()
 @app.route("/caregivers/<int:caregiver_id>/files")
 def getFile(caregiver_id):
 	if request.method == "GET":
@@ -82,21 +93,21 @@ def careGiverEvent(caregiver_id):
 		st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 		_ts_filename = "%s-%s"
 		
-		file = request.files['file']
-		if file and allowed_file(file.filename):
-			_ts_filename = _ts_filename % (st,file.filename)
-			filename = secure_filename(_ts_filename)
-			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+		#file = request.files['file']
+		#if file and allowed_file(file.filename):
+		#	_ts_filename = _ts_filename % (st,file.filename)
+		#	filename = secure_filename(_ts_filename)
+		#	file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			
-			#if file uploaded, create multimedia entry
-			_M = Multimedia.Multimedia()
-			_m = _M.insert(caregiver_id,_mdescription,filename,"")
-			_e = _E.insert(idcaregiver=caregiver_id,idmultimedia=_m.idmultimedia,activity=_activity,mood=_mood,description=_description,timestamp=_timestamp)
-		else:
-			_e = _E.insert(idcaregiver=caregiver_id,activity=_activity,mood=_mood,description=_description,timestamp=_timestamp)
+		#	#if file uploaded, create multimedia entry
+		#	_M = Multimedia.Multimedia()
+		#	_m = _M.insert(caregiver_id,_mdescription,filename,"")
+		#	_e = _E.insert(idcaregiver=caregiver_id,idmultimedia=_m.idmultimedia,activity=_activity,mood=_mood,description=_description,timestamp=_timestamp)
+		#else:
+		_e = _E.insert(idcaregiver=caregiver_id,activity=_activity,mood=_mood,description=_description,timestamp=_timestamp)
 
 
-		#_res = _e.insert(idcaregiver=caregiver_id,idmultimedia=-1,activity=_activity,mood=_mood,description=_description,timestamp=_timestamp)
+		_res = _e.insert(idcaregiver=caregiver_id,idmultimedia=-1,activity=_activity,mood=_mood,description=_description,timestamp=_timestamp)
 		return _e.toJson()
 	else:
 		return "Method not supported"
