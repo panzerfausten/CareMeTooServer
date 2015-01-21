@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask import request
 app = Flask(__name__,static_url_path="")
 from flask import send_from_directory
@@ -18,8 +18,7 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 ###################
 @app.route("/")
 def hello():
-	    return "Hello World!"
-
+    return render_template("index.html")
 #creates new users and gets existing users
 @app.route("/caregivers", methods=['GET','POST'])
 def users():	
