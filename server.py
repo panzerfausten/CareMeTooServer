@@ -14,11 +14,42 @@ import time
 UPLOAD_FOLDER = 'files/'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
-
+##################Machine Learning
+from Ml import Ml
+##################helper
+from Helper import Helper
 ###################
 @app.route("/")
 def hello():
     return render_template("index.html")
+
+#show machine learning example data
+@app.route("/ml")
+def example():
+	if request.method == 'GET':
+
+		_file_a = request.args.get("file_a")
+		_file_b = request.args.get("file_b")
+		_file_c = request.args.get("file_c")
+		
+		_v = ViewRenderer("ml")
+		_v.render()
+		if(_file_a != None):
+				
+			#if you have ther parameters...
+			#m = Ml("data/n2/n2_sample/1425405680330/","data/n2/n2_1/1425406094608/","data/n2/n2_2/1425407232389/")
+			m = Ml(_file_a,_file_b,_file_c)
+			_data = m.classify()
+			h = Helper()
+			_data = h.listToGrid(_data)
+			_v = _v.inject("%%%checkboxes%%%",str(_data))
+			return _v
+		else:
+			_v = _v.inject("%%%checkboxes%%%","")
+			return _v
+
+	else:
+		return "Method nor supported"
 #creates new users and gets existing users
 @app.route("/caregivers", methods=['GET','POST'])
 def users():	

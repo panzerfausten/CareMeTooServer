@@ -1,0 +1,2 @@
+montage -geometry +1+1 n5/plots_sample_GSR_raw.png  n5/plots_sample_GSR_normalized.png n5/plots_t1_GSR_raw.png n5/plots_t1_GSR_normalized.png n5/plots_t2_GSR_raw.png n5/plots_t2_GSR_normalized.png n5/plots_t3_GSR_raw.png n5/plots_t3_GSR_normalized.png out.png
+convert out.png plots_n5/plots.pdf
